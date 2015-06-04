@@ -1,0 +1,24 @@
+{
+    "manifest_version": 2,
+    "name": "FocusOnTask",
+    "version": "1.0",
+    "icons": {
+	"48": "icon.png",
+	"128": "icon.png"
+    },
+    "description": "動画サイトなどの閲覧を制限してタスクに集中させます",
+    "content_scripts": [{
+	"matches": ["http://*/*", "https://*/*"],
+	"js": ["js/script.js"]
+    }],
+    "web_accessible_resources": [
+	"tasklist.html"
+    ],
+    "browser_action": {
+	"default_icon": {
+	    "48": "icon.png"
+	},
+	"default_title": "FocusOnTask",
+	"default_popup": "tasklist.html"
+    }
+}
