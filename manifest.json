@@ -12,7 +12,8 @@
 	"js": ["js/script.js"]
     }],
     "web_accessible_resources": [
-	"tasklist.html"
+	"tasklist.html",
+	"tryAccess.html"
     ],
     "browser_action": {
 	"default_icon": {

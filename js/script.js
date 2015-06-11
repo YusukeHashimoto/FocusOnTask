@@ -9,5 +9,26 @@ for(i = 0; i < document.getElementsByTagName("iframe").length; i++) {
 }
 
 if(location.href.includes("nicovideo") || location.href.includes("youtube")) {
-    location.href="chrome-extension://chkckjbgpgbeljgecnabkolgniljocnk/tasklist.html";
+    //location.href="chrome-extension://chkckjbgpgbeljgecnabkolgniljocnk/tasklist.html";
+    location.href="chrome-extension://chkckjbgpgbeljgecnabkolgniljocnk/tryAccess.html";
+} else {
+    //document.write("<iframe id=\"ifrm\" src=\"../tasklist.html\" style=\"display:none\"></iframe>");
+
+    var newNode = document.createElement('iframe');
+    newNode.id = "ifrm";
+    newNode.src = 'chrome-extension://chkckjbgpgbeljgecnabkolgniljocnk/tasklist.html';
+    newNode.style.display = "none";
+    var bodyNode = document.getElementsByTagName('body').item(0);
+    bodyNode.appendChild(newNode);
+
+    ifrm = document.getElementById('ifrm').contentWindow;
+    ifrm.postMessage("hello from script.js", 'chrome-extension://chkckjbgpgbeljgecnabkolgniljocnk/tasklist.html');
+
+    var flag = false;
+    window.addEventListener('message', function(event) {
+	if(!flag) {
+	    flg = true;
+	    //alert(event.data);
+	}
+    }, false);
 }
