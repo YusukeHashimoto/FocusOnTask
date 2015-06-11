@@ -9,5 +9,5 @@ for(i = 0; i < document.getElementsByTagName("iframe").length; i++) {
 }
 
 if(location.href.includes("nicovideo") || location.href.includes("youtube")) {
-    location.href="chrome-extension://nhdenaocdammdiakijiiehkfjkongiel/tasklist.html";
+    location.href="chrome-extension://chkckjbgpgbeljgecnabkolgniljocnk/tasklist.html";
 }
