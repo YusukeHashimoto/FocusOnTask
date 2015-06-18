@@ -1,4 +1,8 @@
-﻿function addTask() {
+﻿if(localStorage.getItem("mode") == null) {
+    localStorage.setItem("mode", "restrict");
+}
+
+function addTask() {
     localStorage.setItem(localStorage.length, document.form.title.value);
     localStorage.setItem("d" + (localStorage.length - 1), document.form.date.value);
     alert("added " + document.form.title.value);
@@ -16,12 +20,22 @@ function drawList() {
     document.write("</p>");
 }
 
+function restrictMode() {
+    localStorage.setItem("mode", "restrict");
+}
+
+function regretMode() {
+    localStorage.setItem("mode", "regret");
+}
+
 document.addEventListener('DOMContentReady', function() {
-    
     alert("hello");
 });
+
 drawList();
 document.getElementById('addBtn').addEventListener('click', addTask);
+document.getElementById('restrict').addEventListener('click', restrictMode);
+document.getElementById('regret').addEventListener('click', regretMode);
 
 date = new Date();
 count = localStorage.getItem(date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate());
@@ -31,6 +45,10 @@ if(count != null) {
     count = 0;
 }
 document.write("今日は" + count + "回、制限されたサイトにアクセスしようとしました。");
+month = date.getMonth() + 1;
+if(month < 10) month = "0" + month;
+today = date.getFullYear() + "-" + month + "-" + date.getDate();
+document.write("今日は" + localStorage.getItem("stay" + today) + "秒、制限されたサイトを開いていました");
 
 window.addEventListener('message', function(event) {
     event.source.postMessage("hello from taskdata.js", event.origin);
