@@ -33,3 +33,9 @@ window.onbeforeunload = function() {
     }
 }
 
+function checkURL(url) {
+    if(localStorage.getItem("mode") == "restrict" && url.includes("nicovideo")) {
+	//location.href = "http://google.com";
+	location.href = 'chrome-extension://mfingehnckgdehpkakfcamencpiojgcd/tasklist.html';
+    }
+}
