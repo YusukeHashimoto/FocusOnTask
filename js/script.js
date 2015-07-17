@@ -2,7 +2,7 @@
     document.getElementsByTagName("iframe")[i].style.display = "none";
 }
 
-if(location.href.includes("nicovideo") || location.href.includes("youtube")) {
+//if(location.href.includes("nicovideo") || location.href.includes("youtube")) {
     //制限モードでは下が必要
     //location.href="chrome-extension://chkckjbgpgbeljgecnabkolgniljocnk/tryAccess.html";
 /*
@@ -30,5 +30,9 @@ if(location.href.includes("nicovideo") || location.href.includes("youtube")) {
 	document.getElementById('myframe').contentWindow.document.getElementById("task").appendChild(innerBody);
     }
     bodyNode.appendChild(newNode);
-    
-}
+
+    /*
+    window.addEventListener("message", function(event) {
+	alert(event.data);
+    }, false);*/
+//}
