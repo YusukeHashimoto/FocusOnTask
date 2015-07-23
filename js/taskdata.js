@@ -9,15 +9,50 @@ function addTask() {
     location.reload();
 }
 
-function drawList() {
-    document.write("<p><table border><caption>Task List</caption><tr><th>Task</th><th>date</th><th>done?</th></tr>");
-    for(i = 0; i < localStorage.length; i++) {
-	task = localStorage.getItem("" + i);
-	if(task != null && task != "") {
-	    document.write("<tr><td>" + localStorage.getItem("" + i) + "</td><td>" + localStorage.getItem("d" + i) + "</td><td><button type='button' name='done'" + i + ">done</button</td></tr>");
+var Task = function(id, name, date) {
+    this.id = id;
+    this.name = name;
+    this.date = date;
+}
+
+function removeTask(id) {
+    localStorage.removeItem("" + id);
+    localStorage.removeItem("d" + id);
+    location.reload();
+}
+
+var tasks;
+
+function loadTask() {
+    var taskArray = new Array();
+    for(i = 0; i < 100; i++) {
+	if(localStorage.getItem("" + i) != null && localStorage.getItem("" + i) != "") {
+	    taskArray.push(
+		new Task(i, localStorage.getItem("" + i), localStorage.getItem("d" + i)));
 	}
     }
+    taskArray.sort(function(a, b) {
+	if(a.date > b.date) return 1;
+	if(a.date < b.date) return -1;
+	return 0;
+    });
+    tasks = taskArray;
+    return taskArray;
+}
+
+function drawList() {
+    var taskArray = loadTask();
+    document.write("<p><table border><caption>Task List</caption><tr><th>Task</th><th>date</th><th>done?</th></tr>");
+    for(i = 0; i < taskArray.length; i++) {
+	document.write("<tr><td>" + taskArray[i].name + "</td><td>" + taskArray[i].date + "</td><td><button type='button' id='" + taskArray[i].id + "'>done</button</td></tr>");
+    }
     document.write("</p>");
+    for(i = 0; i < taskArray.length; i++) {
+	id = taskArray[i].id;
+	document.getElementById(taskArray[i].id).onclick = function() {
+	    removeTask(id);
+	}
+    }
 }
 
 function restrictMode() {
