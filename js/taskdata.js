@@ -76,7 +76,9 @@ function regretMode() {
 }
 
 function addURL() {
-    localStorage.setItem("url" + localStorage.length, document.form.url.value);
+    var length = localStorage.length;
+    localStorage.setItem("url" + length, document.form.url.value);
+    localStorage.setItem("c" + length, "0");
     location.reload();
 }
 

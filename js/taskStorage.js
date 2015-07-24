@@ -38,7 +38,7 @@ function restrictedURL(url) {
 	restrictedURL = localStorage.getItem("url" + i);
 	if(url.includes(restrictedURL)) {
 	    var key = "c" + i;
-	    if(localStorage.getItem(key) == null)
+	    if(localStorage.getItem(key) == null || localStorage.getItem(key) == "")
 		localStorage.setItem(key, "0");
 	    localStorage.setItem(key,  parseInt(localStorage.getItem(key)) + 1 + "");
 	    
