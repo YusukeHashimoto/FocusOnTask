@@ -1,11 +1,16 @@
 <html>
   <title>Task List</title>
     <form name="form">
-      Title:<input type="text" name="title"/>
+      Title:<input type="text" name="title"/><br>
       Date:<input type="date" name="date"/>
-      Time:<input type="time" name="time"/>
       <button type="button" id="addBtn">add task</button>
+      <br>
       <button type="button" id="restrict">制限モードにする</button>
       <button type="button" id="regret">反省モードにする</button>
+      <br>
+      URL:<input type="text" name="url"/>
+      <button type="button" id="urlBtn">add URL</button>
+      <canvas id="myChart" width="200" height="200"></canvas>
+      <script src="Chart.js-master/Chart.js"></script>
       <script src="js/taskdata.js"></script>
 </html>

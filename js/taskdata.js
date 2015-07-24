@@ -18,6 +18,7 @@ var Task = function(id, name, date) {
 function removeTask(id) {
     localStorage.removeItem("" + id);
     localStorage.removeItem("d" + id);
+    alert("お疲れさま!");
     location.reload();
 }
 
@@ -38,6 +39,17 @@ function loadTask() {
     });
     tasks = taskArray;
     return taskArray;
+}
+
+function countAccess() {
+    var c = 0;
+    for(i = 0; i < 100; i++) {
+	n = localStorage.getItem("c" + i);
+	if(n != null) {
+	    c += parseInt(n);
+	}
+    }
+    return c;
 }
 
 function drawList() {
@@ -63,6 +75,11 @@ function regretMode() {
     localStorage.setItem("mode", "regret");
 }
 
+function addURL() {
+    localStorage.setItem("url" + localStorage.length, document.form.url.value);
+    location.reload();
+}
+
 document.addEventListener('DOMContentReady', function() {
     alert("hello");
 });
@@ -71,6 +88,7 @@ drawList();
 document.getElementById('addBtn').addEventListener('click', addTask);
 document.getElementById('restrict').addEventListener('click', restrictMode);
 document.getElementById('regret').addEventListener('click', regretMode);
+document.getElementById('urlBtn').addEventListener('click', addURL);
 
 date = new Date();
 count = localStorage.getItem(date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate());
@@ -79,12 +97,71 @@ if(count != null) {
 } else {
     count = 0;
 }
-document.write("今日は" + count + "回、制限されたサイトにアクセスしようとしました。");
+//document.write("今日は" + countAccess() + "回、遊びサイトにアクセスし、");
 month = date.getMonth() + 1;
 if(month < 10) month = "0" + month;
 today = date.getFullYear() + "-" + month + "-" + date.getDate();
-document.write("今日は" + localStorage.getItem("stay" + today) + "秒、制限されたサイトを開いていました");
+var count = localStorage.getItem("stay" + today);
+document.write("今日は" + parseInt(count/60) + "分" + parseInt(count%60) + "秒遊びサイトを開いていました");
 
 window.addEventListener('message', function(event) {
     event.source.postMessage("hello from taskdata.js", event.origin);
 }, false);
+
+function drawChart() {
+    colors = [
+	"#F7464A", "#46BFBD", "#FDB45C"
+    ];
+    heighlights = [
+	"#FF5A5E", "#5AD3D1", "#FDB45C"
+    ];
+    var ctx = document.getElementById("myChart").getContext("2d");
+    
+    var array = new Array();
+    
+    for(i = 0, j = 0; i < 100; i++) {
+	url = localStorage.getItem("url" + i);
+	if(url != null) {
+	    array.push({
+		value: parseInt(localStorage.getItem("c" + i)),
+		color: colors[j % 3],
+		heighlight: heighlights[j % 3],
+		label: url
+	    });
+	    j++;
+	}
+    }
+    /*n
+    var chart_option = {
+	legendTemplate : "<% for (var i=0; i<datasets.length; i++){%><li><span style=\"color:<%=datasets[i].strokeColor%>\">■</span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%>"
+};*/
+
+    var pieChart = new Chart(ctx).Pie(array);
+}
+
+function drawURLList() {
+    var URLs = new Array();
+    var counts = new Array();
+    for(i = 0; i < 100; i++) {
+	url = localStorage.getItem("url" + i);
+	if(url != null) {
+	    URLs.push(url);
+	    counts.push(localStorage.getItem("c" + i));
+	}
+    }
+    var sum = countAccess();
+    document.write("<p><table border><caption>URL List</caption><tr><th>URL</th><th>%</th></tr>");
+    for(i = 0; i < URLs.length; i++) {
+	document.write("<tr><td>" + URLs[i] + "</td><td>" + parseInt((counts[i] / sum) * 100) + "%</td><td><button type='button' id='" + i + "'>delete</button</td></tr>");
+    }
+    document.write("</p>");/*
+    for(i = 0; i < taskArray.length; i++) {
+	id = taskArray[i].id;
+	document.getElementById(taskArray[i].id).onclick = function() {
+	    removeTask(id);
+	}
+    }*/
+}
+
+drawChart();
+drawURLList();

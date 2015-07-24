@@ -34,8 +34,14 @@ window.onbeforeunload = function() {
 }
 
 function restrictedURL(url) {
-    for(i = 0; i < localStorage.length; i++) {
-	if(url.includes(localStorage.getItem("url" + i))) {
+    for(i = 0; i < 100; i++) {
+	restrictedURL = localStorage.getItem("url" + i);
+	if(url.includes(restrictedURL)) {
+	    var key = "c" + i;
+	    if(localStorage.getItem(key) == null)
+		localStorage.setItem(key, "0");
+	    localStorage.setItem(key,  parseInt(localStorage.getItem(key)) + 1 + "");
+	    
 	    return true;
 	}
     }
@@ -50,7 +56,7 @@ function checkURL(url) {
 	pop = window.open(url).close;
 	pop.postMessage("message", url);
 */
-    } else if(localStorage.getItem("mode") == "regret" && (url.includes("nicovideo") || restrictedURL(url)) && todaysTask() != null) {
+    } else if(localStorage.getItem("mode") == "regret" && restrictedURL(url) && todaysTask() != null) {
 	todaysStay = parseInt(localStorage.getItem("stay" + today));
 	if(todaysStay > 30 * 60) {
 	    alert("今日は" + todaysStay + "秒も遊びました.\nそろそろ" + todaysTask() + "を片付けませんか?");
