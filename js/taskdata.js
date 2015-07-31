@@ -1,8 +1,4 @@
-﻿if(localStorage.getItem("mode") == null) {
-    localStorage.setItem("mode", "restrict");
-}
-
-function addTask() {
+﻿function addTask() {
     localStorage.setItem(localStorage.length, document.form.title.value);
     localStorage.setItem("d" + (localStorage.length - 1), document.form.date.value);
     alert("added " + document.form.title.value);
@@ -19,6 +15,13 @@ function removeTask(id) {
     localStorage.removeItem("" + id);
     localStorage.removeItem("d" + id);
     alert("お疲れさま!");
+    location.reload();
+}
+
+function removeURL(id) {
+    localStorage.removeItem("url" + id);
+    localStorage.removeItem("c" + id);
+    alert("url" + id + "を削除しました");
     location.reload();
 }
 
@@ -54,25 +57,20 @@ function countAccess() {
 
 function drawList() {
     var taskArray = loadTask();
-    document.write("<p><table border><caption>Task List</caption><tr><th>Task</th><th>date</th><th>done?</th></tr>");
+    document.write("<p><table border><caption>Task List</caption><tr><th>タスク</th><th>日付</th><th></th></tr>");
     for(i = 0; i < taskArray.length; i++) {
-	document.write("<tr><td>" + taskArray[i].name + "</td><td>" + taskArray[i].date + "</td><td><button type='button' id='" + taskArray[i].id + "'>done</button</td></tr>");
+	document.write("<tr><td>" + taskArray[i].name + "</td><td>" + taskArray[i].date + "</td><td><button type='button' id='" + taskArray[i].id + "'>完了</button</td></tr>");
     }
     document.write("</p>");
     for(i = 0; i < taskArray.length; i++) {
-	id = taskArray[i].id;
+	var id = taskArray[i].id;/*
 	document.getElementById(taskArray[i].id).onclick = function() {
-	    removeTask(id);
-	}
+	removeTask(id);*/
+	document.getElementById(id).addEventListener('click', function(evt) {
+	    removeTask(evt.target.id);
+	    //alert("removeTask" + evt.target.id);
+	});
     }
-}
-
-function restrictMode() {
-    localStorage.setItem("mode", "restrict");
-}
-
-function regretMode() {
-    localStorage.setItem("mode", "regret");
 }
 
 function addURL() {
@@ -88,8 +86,6 @@ document.addEventListener('DOMContentReady', function() {
 
 drawList();
 document.getElementById('addBtn').addEventListener('click', addTask);
-document.getElementById('restrict').addEventListener('click', restrictMode);
-document.getElementById('regret').addEventListener('click', regretMode);
 document.getElementById('urlBtn').addEventListener('click', addURL);
 
 date = new Date();
@@ -133,36 +129,44 @@ function drawChart() {
 	    j++;
 	}
     }
-    /*n
-    var chart_option = {
-	legendTemplate : "<% for (var i=0; i<datasets.length; i++){%><li><span style=\"color:<%=datasets[i].strokeColor%>\">■</span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%>"
-};*/
-
-    var pieChart = new Chart(ctx).Pie(array);
+    
+    var option  = {
+	tooltipTemplate: "<%if (label){%><%=label%><%}%>",
+	onAnimationComplete: function(){
+	    this.showTooltip(this.segments, true);
+	},
+	tooltipEvents: [],
+	showTooltips: true
+    };
+    var pieChart = new Chart(ctx).Pie(array, option);
 }
 
 function drawURLList() {
     var URLs = new Array();
     var counts = new Array();
+    var idArray = new Array();
     for(i = 0; i < 100; i++) {
 	url = localStorage.getItem("url" + i);
 	if(url != null) {
 	    URLs.push(url);
-	    counts.push(localStorage.getItem("c" + i));
+	    counts.push(parseInt(localStorage.getItem("c" + i)));
+	    idArray.push("url" + i);
 	}
     }
     var sum = countAccess();
-    document.write("<p><table border><caption>URL List</caption><tr><th>URL</th><th>%</th></tr>");
+    document.write("<p><table border><caption>URL List</caption><tr><th>URL</th><th>割合</th><th></th></tr>");
     for(i = 0; i < URLs.length; i++) {
-	document.write("<tr><td>" + URLs[i] + "</td><td>" + parseInt((counts[i] / sum) * 100) + "%</td><td><button type='button' id='" + i + "'>delete</button</td></tr>");
+	document.write("<tr><td>" + URLs[i] + "</td><td>" + parseInt((counts[i] / sum) * 100) + "%</td><td><button type='button' id='" + idArray[i] + "'>削除</button</td></tr>");
     }
-    document.write("</p>");/*
-    for(i = 0; i < taskArray.length; i++) {
-	id = taskArray[i].id;
-	document.getElementById(taskArray[i].id).onclick = function() {
-	    removeTask(id);
+    document.write("</p>");
+
+    for(i = 0; i < URLs.length; i++) {
+	var id = idArray[i];
+	document.getElementById(idArray[i]).onclick = function(evt) {
+	    //alert("removeURL" + id);
+	    removeURL(evt.target.id.substring(3));
 	}
-    }*/
+    }
 }
 
 drawChart();
